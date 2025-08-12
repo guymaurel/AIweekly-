@@ -1,0 +1,8 @@
+{
+  "name": "weekly-ai-blog",
+  "type": "module",
+  "scripts": { "start": "node generate-weekly.js" },
+  "dependencies": {
+    "rss-parser": "^3.13.0"
+  }
+}
