@@ -1,0 +1,37 @@
+name: Build & Publish Weekly
+
+on:
+  schedule:
+    # Lundi 07:00 à Paris ≈ 05:00 UTC en été (CEST). Ajuste si besoin.
+    - cron: "0 5 * * 1"
+  workflow_dispatch: {}  # permet de lancer manuellement
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: node generate-weekly.js
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
