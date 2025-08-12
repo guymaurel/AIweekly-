@@ -2,12 +2,12 @@ name: Build & Publish Weekly
 
 on:
   schedule:
-    # Lundi 07:00 à Paris ≈ 05:00 UTC en été (CEST). Ajuste si besoin.
+    # Lundi 07:00 Paris ≈ 05:00 UTC en été
     - cron: "0 5 * * 1"
-  workflow_dispatch: {}  # permet de lancer manuellement
+  workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -23,15 +23,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
+      # 'npm ci' échoue sans package-lock.json → on utilise 'npm i'
+      - run: npm i
       - run: node generate-weekly.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
   deploy:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
