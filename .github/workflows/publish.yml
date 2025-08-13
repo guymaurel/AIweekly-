@@ -2,9 +2,8 @@ name: Build & Publish Weekly
 
 on:
   schedule:
-    # Lundi 07:00 Paris ≈ 05:00 UTC en été (et 06:00 en hiver si tu veux)
-    - cron: "0 5 * * 1"
-  workflow_dispatch: {}
+    - cron: "0 7 * * 1"   # Lundi 07:00 UTC (~09:00 Paris été, ~08:00 hiver)
+  workflow_dispatch: {}    # garde le bouton “Run workflow”
 
 permissions:
   contents: read
