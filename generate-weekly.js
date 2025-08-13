@@ -118,11 +118,13 @@ async function fetchItems() {
 }
 
 function writeIndex(latestSlug, latestTitle, archives){
-  + const items = archives.map(x => `<li><a href="./${x.slug}/">${x.title}</a> • <span class="meta">${x.date}</span></li>`).join("");
+  const items = archives
+    .map(x => `<li><a href="./${x.slug}/">${x.title}</a> • <span class="meta">${x.date}</span></li>`)
+    .join("");
   const html = layout(SITE.name, `
   <div class="card">
     <h2>Dernier article</h2>
-+ <p><a href="./${latestSlug}/">${latestTitle}</a></p>
+    <p><a href="./${latestSlug}/">${latestTitle}</a></p>
   </div>
   <div class="card">
     <h2>Archives</h2>
