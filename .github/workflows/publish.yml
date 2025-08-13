@@ -2,7 +2,7 @@ name: Build & Publish Weekly
 
 on:
   schedule:
-    # Lundi 07:00 Paris ≈ 05:00 UTC en été
+    # Lundi 07:00 Paris ≈ 05:00 UTC en été (et 06:00 en hiver si tu veux)
     - cron: "0 5 * * 1"
   workflow_dispatch: {}
 
@@ -20,12 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      # 'npm ci' échoue sans package-lock.json → on utilise 'npm i'
-      - run: npm i
+
+      # 'npm ci' peut échouer sans package-lock.json → fallback sur 'npm i'
+      - run: npm ci || npm i
+
+      # Génère le site (dossier public/)
       - run: node generate-weekly.js
+
+      # Prépare GitHub Pages et upload l'artefact
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
@@ -39,4 +46,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
